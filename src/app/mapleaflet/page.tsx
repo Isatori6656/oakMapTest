@@ -1,8 +1,11 @@
 "use client";
 
-import Mapleaflet from "@/components/Mapleaflet";
+import dynamic from "next/dynamic";
 
 export default function MapleafletPage() {
+  const Mapleaflet = dynamic(() => import("@/components/Mapleaflet"), {
+    ssr: false,
+  });
   return (
     <div className="flex h-full items-start justify-center min-h-screen py-2">
       <Mapleaflet />
