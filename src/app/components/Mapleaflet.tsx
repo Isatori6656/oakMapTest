@@ -15,20 +15,23 @@ import SearchBar from "@/components/SearchBar";
 import useThirdpartyStore from "@/zustandStore/thirdpartyStore";
 import { getGoogleProfile } from "@/api/google";
 import { getFacebookProfile } from "@/api/facebook";
+import { useRouter } from "next/navigation";
 
-interface googleUser {
+interface thirdPartyUser {
   name: string;
   picture: string;
 }
 
 const Mapleaflet = () => {
+  const router = useRouter();
+
   const accessToken = useThirdpartyStore((state) => state.accessToken);
   const thirdPartyType = useThirdpartyStore((state) => state.type);
 
   const [rows, setColumns] = useState<renewPlace[]>([]);
   const [polys, setPolys] = useState<polygonFeatures[]>([]);
   const [latlng, setLatlng] = useState<LatLngTuple>([24.993955, 121.504603]);
-  const [popupUser, setPopupUser] = useState<googleUser>({
+  const [popupUser, setPopupUser] = useState<thirdPartyUser>({
     name: "",
     picture: "",
   });
@@ -121,7 +124,9 @@ const Mapleaflet = () => {
   }, [latlng]);
 
   useEffect(() => {
-    if (accessToken === "" || thirdPartyType === "") return;
+    if (accessToken === "" || thirdPartyType === "") {
+      router.push("/");
+    }
     async function getProfile(thirdPartyType: string) {
       if (thirdPartyType === "facebook") {
         const data = await getFacebookProfile(accessToken);
@@ -141,7 +146,7 @@ const Mapleaflet = () => {
     }
 
     getProfile(thirdPartyType);
-  }, [accessToken, thirdPartyType]);
+  }, [accessToken, router, thirdPartyType]);
 
   useEffect(() => {
     if (popupUser.name && popupUser.picture && mapRef.current) {

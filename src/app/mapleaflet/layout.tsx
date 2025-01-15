@@ -1,4 +1,4 @@
-export default function RootLayout({
+export default function MapleafletRootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
